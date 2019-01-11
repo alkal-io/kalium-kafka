@@ -5,7 +5,9 @@ package io.alkal.kalium.kafka.tests;/*
 import io.alkal.kalium.Kalium;
 import io.alkal.kalium.interfaces.KaliumQueueAdapter;
 import io.alkal.kalium.kafka.KaliumKafkaQueueAdapter;
+import org.junit.Assert;
 import org.junit.Test;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 
 public class KaliumKafkaBasicTest {
@@ -13,7 +15,7 @@ public class KaliumKafkaBasicTest {
     public static final String KAFKA_ENDPOINT = "localhost:9092";
 
     @Test
-    public void testItShouldCallReactorMethod_whenAMatchingEventIsPosted() throws InterruptedException{
+    public void testItShouldCallReactorMethod_whenAMatchingEventIsPosted() throws InterruptedException {
 
 
         KaliumQueueAdapter queueAdapter1 = new KaliumKafkaQueueAdapter(KAFKA_ENDPOINT);
@@ -37,10 +39,16 @@ public class KaliumKafkaBasicTest {
         kalium2.start();
 
         Payment payment = new Payment();
+        payment.setId("Payment Id");
 
         kalium2.post(payment);
-        Thread.sleep(3000);
-        Mockito.verify(myReactor).doSomething(Mockito.eq(payment));
+        Thread.sleep(1000);
+
+        ArgumentCaptor<Payment> argumentCaptor = ArgumentCaptor.forClass(Payment.class);
+        Mockito.verify(myReactor).doSomething(argumentCaptor.capture());
+        Payment capturedArgument = argumentCaptor.<Payment>getValue();
+        Assert.assertEquals(capturedArgument.getId(), payment.getId());
+
 
     }
 

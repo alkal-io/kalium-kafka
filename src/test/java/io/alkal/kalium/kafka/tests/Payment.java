@@ -4,6 +4,8 @@ public class Payment {
 
     private boolean processed;
 
+    private String id;
+
     public boolean isProcessed() {
         return processed;
     }
@@ -12,5 +14,11 @@ public class Payment {
         this.processed = processed;
     }
 
+    public String getId() {
+        return id;
+    }
 
+    public void setId(String id) {
+        this.id = id;
+    }
 }
