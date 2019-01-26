@@ -1,0 +1,13 @@
+#install: gradle wrapper --gradle-version 5.1.1
+install: ./gradlew assemble
+language: java
+jdk:
+  - oraclejdk8
+  - openjdk8
+
+before_script:
+- chmod a+x gradlew
+
+sccript: ./gradlew build
+notifications:
+  slack: kalium-alkalio:TKKbLCQK8wW6HLPGfrGWyKUS
