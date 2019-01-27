@@ -5,13 +5,13 @@ before_script:
   - bin/zookeeper-server-start.sh config/zookeeper.properties&
   - bin/kafka-server-start.sh config/server.properties&
   - chmod a+x gradlew
-  install: ./gradlew assemble
-  language: java
-  jdk:
-    - oraclejdk8
-    - oraclejdk9
-    - openjdk8
-    - openjdk9
-  script: ./gradlew build
-  notifications:
-    slack: kalium-alkalio:TKKbLCQK8wW6HLPGfrGWyKUS
+install: ./gradlew assemble
+language: java
+jdk:
+  - oraclejdk8
+  - oraclejdk9
+  - openjdk8
+  - openjdk9
+script: ./gradlew build
+notifications:
+  slack: kalium-alkalio:TKKbLCQK8wW6HLPGfrGWyKUS
