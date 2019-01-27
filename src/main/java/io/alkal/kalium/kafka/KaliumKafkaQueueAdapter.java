@@ -11,6 +11,7 @@ import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.apache.kafka.common.serialization.StringSerializer;
 
+import java.time.Duration;
 import java.util.*;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
@@ -54,7 +55,7 @@ public class KaliumKafkaQueueAdapter implements KaliumQueueAdapter {
                     @Override
                     public Object call() throws Exception {
                         while (true) {
-                            ConsumerRecords<String, ?> records = consumer.poll(100);
+                            ConsumerRecords<String, ?> records = consumer.poll(Duration.ofSeconds(1L));
                             for (ConsumerRecord<String, ?> record : records)
                                 queueListener.onObjectReceived(consumer.getReactor(), record.value());
                         }
