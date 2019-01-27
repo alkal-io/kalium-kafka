@@ -42,7 +42,7 @@ public class KaliumKafkaBasicTest {
         payment.setId("Payment Id");
 
         kalium2.post(payment);
-        Thread.sleep(1000);
+        Thread.sleep(30000);
 
         ArgumentCaptor<Payment> argumentCaptor = ArgumentCaptor.forClass(Payment.class);
         Mockito.verify(myReactor).doSomething(argumentCaptor.capture());
