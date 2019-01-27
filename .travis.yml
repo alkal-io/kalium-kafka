@@ -1,17 +1,18 @@
 jobs:
   include:
-    - stage: kafka
+    - stage: setup_kafka
+      before_script: chmod a+x ./scripts/install_and_run_kafka.sh
       script: ./scripts/install_and_run_kafka.sh
-#install: gradle wrapper --gradle-version 5.1.1
-install: ./gradlew assemble
-language: java
-jdk:
-  - oraclejdk8
-  - openjdk8
-
-before_script:
-- chmod a+x gradlew
-
-sccript: ./gradlew build
-notifications:
-  slack: kalium-alkalio:TKKbLCQK8wW6HLPGfrGWyKUS
+    - stage: build_and_test
+      install: ./gradlew assemble
+      language: java
+      jdk:
+        - oraclejdk8
+        - oraclejdk9
+        - openjdk8
+        - openjdk9
+      before_script:
+        - chmod a+x gradlew
+      script: ./gradlew build
+      notifications:
+        slack: kalium-alkalio:TKKbLCQK8wW6HLPGfrGWyKUS
