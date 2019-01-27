@@ -1,8 +1,11 @@
 jobs:
   include:
     - stage: setup_kafka
-      before_script: chmod a+x ./scripts/install_and_run_kafka.sh
-      script: ./scripts/install_and_run_kafka.sh
+      before_script:
+    - wget https://www.apache.org/dyn/closer.cgi?path=/kafka/2.1.0/kafka_2.11-2.1.0.tgz
+    - tar -xvf kafka_2.11-2.1.0.tgz
+    - cd kafka_2.11-2.1.0
+      script: bin/zookeeper-server-start.sh config/zookeeper.properties
     - stage: build_and_test
       install: ./gradlew assemble
       language: java
