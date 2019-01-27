@@ -2,8 +2,8 @@ before_script:
   - wget https://www-eu.apache.org/dist/kafka/2.1.0/kafka_2.11-2.1.0.tgz
   - tar -xvf kafka_2.11-2.1.0.tgz
   - cd kafka_2.11-2.1.0
-  - bin/zookeeper-server-start.sh config/zookeeper.properties &
-  - bin/kafka-server-start.sh config/server.properties &
+  - bin/zookeeper-server-start.sh config/zookeeper.properties&
+  - bin/kafka-server-start.sh config/server.properties&
   - chmod a+x gradlew
   install: ./gradlew assemble
   language: java
