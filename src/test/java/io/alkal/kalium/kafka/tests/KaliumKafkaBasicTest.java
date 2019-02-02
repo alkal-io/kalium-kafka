@@ -10,6 +10,11 @@ import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+
 public class KaliumKafkaBasicTest {
 
     public static final String KAFKA_ENDPOINT = "localhost:9092";
@@ -24,30 +29,32 @@ public class KaliumKafkaBasicTest {
         Kalium kalium1 = Kalium.Builder()
                 .setQueueAdapter(queueAdapter1)
                 .addReactor(myReactor)
+                .addReactor(new MyReactor2())
+                .addReactor(new MyReactor3())
+                .addReactor(new MyReactor4())
                 .build();
 
-        kalium1 = Mockito.spy(kalium1);
         kalium1.start();
 
         KaliumQueueAdapter queueAdapter2 = new KaliumKafkaQueueAdapter(KAFKA_ENDPOINT);
-
-
         Kalium kalium2 = Kalium.Builder()
                 .setQueueAdapter(queueAdapter2)
                 .build();
-        Mockito.spy(kalium2);
         kalium2.start();
 
         Payment payment = new Payment();
         payment.setId("Payment Id");
 
         kalium2.post(payment);
-        Thread.sleep(30000);
 
-        ArgumentCaptor<Payment> argumentCaptor = ArgumentCaptor.forClass(Payment.class);
-        Mockito.verify(myReactor).doSomething(argumentCaptor.capture());
-        Payment capturedArgument = argumentCaptor.<Payment>getValue();
-        Assert.assertEquals(capturedArgument.getId(), payment.getId());
+        Thread.sleep(6000);
+
+        synchronized (myReactor) {
+            ArgumentCaptor<Payment> argumentCaptor = ArgumentCaptor.forClass(Payment.class);
+            Mockito.verify(myReactor).doSomething(argumentCaptor.capture());
+            Payment capturedArgument = argumentCaptor.<Payment>getValue();
+            Assert.assertEquals(capturedArgument.getId(), payment.getId());
+        }
 
 
     }

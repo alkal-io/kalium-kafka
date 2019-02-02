@@ -13,9 +13,7 @@ import org.apache.kafka.common.serialization.StringSerializer;
 
 import java.time.Duration;
 import java.util.*;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.util.concurrent.*;
 import java.util.stream.Collectors;
 
 public class KaliumKafkaQueueAdapter implements KaliumQueueAdapter {
@@ -27,6 +25,7 @@ public class KaliumKafkaQueueAdapter implements KaliumQueueAdapter {
     private Collection<ConsumerReactor<String, ?>> kafkaConsumers;
 
     private QueueListener queueListener;
+    private ExecutorService postingExecutorService;
 
     public KaliumKafkaQueueAdapter(String kafkaEndpoint) {
         kafkaProps = new Properties();
@@ -47,63 +46,76 @@ public class KaliumKafkaQueueAdapter implements KaliumQueueAdapter {
 
     @Override
     public void start() {
-        if (kafkaConsumers == null || kafkaConsumers.size() == 0) return;
-        ExecutorService executorService = Executors.newFixedThreadPool(kafkaConsumers.size());
-        kafkaConsumers.stream().map(consumer ->
-                executorService.submit(new Callable<Object>() {
+        Collection<Class<?>> reactorClasses = this.queueListener.getReactorToObjectTypeMap().keySet();
+        if (reactorClasses != null && reactorClasses.size() > 0) {
+            ExecutorService executorService = Executors.newFixedThreadPool(reactorClasses.size());
+            List<ConsumerLoop> consumers = queueListener.getReactorToObjectTypeMap().entrySet().stream().map(reactorEntry ->
+                    new ConsumerLoop(reactorEntry.getKey(), reactorEntry.getValue(), this.queueListener)
+            ).collect(Collectors.toList());
+            consumers.forEach(consumer -> executorService.submit(consumer));
 
-                    @Override
-                    public Object call() throws Exception {
-                        while (true) {
-                            ConsumerRecords<String, ?> records = consumer.poll(Duration.ofSeconds(1L));
-                            for (ConsumerRecord<String, ?> record : records)
-                                queueListener.onObjectReceived(consumer.getReactor(), record.value());
-                        }
+            Runtime.getRuntime().addShutdownHook(new Thread() {
+                @Override
+                public void run() {
+                    for (ConsumerLoop consumer : consumers) {
+                        consumer.shutdown();
                     }
-                })
-        ).collect(Collectors.toList());
+                    executorService.shutdown();
+                    try {
+                        executorService.awaitTermination(5000, TimeUnit.DAYS.MILLISECONDS);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+        }
+        postingExecutorService = Executors.newFixedThreadPool(10);
+
     }
 
 
     @Override
     public void post(Object o) {
-        Producer<String, Object> producer = new KafkaProducer<>(kafkaProps);
-        producer.send(new ProducerRecord<String, Object>(o.getClass().getSimpleName(), o));
-        producer.close();
+        postingExecutorService.submit(new Runnable() {
+            @Override
+            public void run() {
+                System.out.println("Object is about to be sent");
+                Producer<String, Object> producer = new KafkaProducer<>(kafkaProps);
+                producer.send(new ProducerRecord<String, Object>(o.getClass().getSimpleName(), o));
+
+                producer.close();
+                System.out.println("Object sent");
+            }
+        });
+
     }
 
     @Override
     public void setQueueListener(QueueListener queueListener) {
         this.queueListener = queueListener;
-        kafkaConsumers = new ArrayList<>();
-        this.queueListener.getReactorToObjectTypeMap().entrySet().stream().forEach(entry -> {
-            Collection<ConsumerReactor<String, ?>> consumers = entry.getValue().stream().map(objectType ->
-                    bindReactor(entry.getKey(), objectType)).collect(Collectors.toList());
-            kafkaConsumers.addAll(consumers);
-        });
     }
 
-    private ConsumerReactor<String, ?> bindReactor(Class<?> reactorClass, Class<?> objectType) {
-        Properties props = new Properties();
-        props.put(BOOTSTRAP_SERVERS, kafkaProps.getProperty(BOOTSTRAP_SERVERS));
-        props.put("group.id", reactorClass.getName());
-        props.put("enable.auto.commit", "true");
-        props.put("auto.commit.interval.ms", "1000");
-        props.put("session.timeout.ms", "30000");
-
-        props.put("key.serializer", "org.apache.kafka.common.serialization.StringSerializer");
-        props.put("value.serializer", "io.alkal.kalium.kafka.JsonSerializer");
-        props.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
-        props.put("value.deserializer", "io.alkal.kalium.kafka.JsonDeSerializer");
-        props.put("pojo.class", objectType);
-
-        ConsumerReactor<String, Object> consumer = new ConsumerReactor<>(props);
-
-        consumer.subscribe(Collections.singletonList(objectType.getSimpleName()));
-        consumer.setReactor(reactorClass);
-        return consumer;
-
-    }
+//    private ConsumerReactor<String, ?> bindReactor(Class<?> reactorClass, Class<?> objectType) {
+//        Properties props = new Properties();
+//        props.put(BOOTSTRAP_SERVERS, kafkaProps.getProperty(BOOTSTRAP_SERVERS));
+//        props.put("group.id", reactorClass.getName());
+//        props.put("enable.auto.commit", "true");
+//        props.put("auto.commit.interval.ms", "1000");
+//        props.put("session.timeout.ms", "30000");
+//
+//        props.put("key.serializer", "org.apache.kafka.common.serialization.StringSerializer");
+//        props.put("value.serializer", "io.alkal.kalium.kafka.JsonSerializer");
+//        props.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
+//        props.put("value.deserializer", "io.alkal.kalium.kafka.JsonDeSerializer");
+//        props.put("pojo.class", objectType);
+//
+//        ConsumerReactor<String, Object> consumer = new ConsumerReactor<>(props);
+//
+//        consumer.subscribe(Collections.singletonList(objectType.getSimpleName()));
+//        consumer.setReactor(reactorClass);
+//        return consumer;
+//
+//    }
 
 
 }
