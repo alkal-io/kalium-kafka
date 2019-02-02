@@ -80,11 +80,15 @@ public class KaliumKafkaQueueAdapter implements KaliumQueueAdapter {
             @Override
             public void run() {
                 System.out.println("Object is about to be sent");
-                Producer<String, Object> producer = new KafkaProducer<>(kafkaProps);
-                producer.send(new ProducerRecord<String, Object>(o.getClass().getSimpleName(), o));
+                try {
+                    Producer<String, Object> producer = new KafkaProducer<>(kafkaProps);
+                    producer.send(new ProducerRecord<String, Object>(o.getClass().getSimpleName(), o));
 
-                producer.close();
-                System.out.println("Object sent");
+                    producer.close();
+                    System.out.println("Object sent");
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         });
 
