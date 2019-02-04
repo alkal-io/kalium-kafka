@@ -23,7 +23,7 @@ public class KaliumKafkaBasicTest {
     @Test
     public void testItShouldCallReactorMethod_whenAMatchingEventIsPosted() throws InterruptedException {
 
-
+        System.out.println("Start Kalium-Kafka Basic End-2-End Test");
         KaliumQueueAdapter queueAdapter1 = new KaliumKafkaQueueAdapter(KAFKA_ENDPOINT);
 
         MyReactor myReactor = Mockito.spy(new MyReactor());
