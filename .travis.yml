@@ -16,6 +16,6 @@ jdk:
   - oraclejdk9
   - openjdk8
   - openjdk9
-script: ./gradlew build   --debug
+script: ./gradlew build 
 notifications:
   slack: kalium-alkalio:TKKbLCQK8wW6HLPGfrGWyKUS
