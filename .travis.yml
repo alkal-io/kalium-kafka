@@ -5,11 +5,11 @@ before_script:
   - rm -rfv kafka_2.11-2.1.0
   - tar -xvf kafka_2.11-2.1.0.tgz
   - kafka_2.11-2.1.0/bin/zookeeper-server-start.sh kafka_2.11-2.1.0/config/zookeeper.properties&
-  - sleep 40s
+  - sleep 20s
   - kafka_2.11-2.1.0/bin/kafka-server-start.sh kafka_2.11-2.1.0/config/server.properties&
-  - sleep 40s
-  - kafka_2.11-2.1.0/bin/kafka-topics.sh --create --zookeeper localhost:2181 --replication-factor 1 --partitions 1 --topic Payment
-  - kafka_2.11-2.1.0/bin/kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic test --from-beginning
+  - sleep 20s
+  - kafka_2.11-2.1.0/bin/kafka-topics.sh --create --zookeeper localhost:2181 --replication-factor 1 --partitions 1 --topic Payment&
+  - kafka_2.11-2.1.0/bin/kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic test --from-beginning&
   - chmod a+x gradlew
 install: ./gradlew assemble
 language: java
