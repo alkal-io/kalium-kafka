@@ -8,6 +8,7 @@ before_script:
   - sleep 20s
   - kafka_2.11-2.1.0/bin/kafka-server-start.sh kafka_2.11-2.1.0/config/server.properties&
   - sleep 20s
+  - kafka_2.11-2.1.0/bin/kafka-topics.sh --create --zookeeper localhost:2181 --replication-factor 1 --partitions 1 --topic Payment
   - chmod a+x gradlew
 install: ./gradlew assemble
 language: java
