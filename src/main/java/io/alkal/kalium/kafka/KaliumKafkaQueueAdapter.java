@@ -31,17 +31,13 @@ public class KaliumKafkaQueueAdapter implements KaliumQueueAdapter {
         kafkaProps = new Properties();
         kafkaProps.put(BOOTSTRAP_SERVERS, kafkaEndpoint);
         kafkaProps.put("acks", "all");
-//        kafkaProps.put("delivery.timeout.ms", 30000);
         kafkaProps.put("batch.size", 16384);
-//        kafkaProps.put("linger.ms", 30000);
         kafkaProps.put("buffer.memory", 33554432);
 
-        StringSerializer ss;
         //TODO provide kalium implementation for these ones
         kafkaProps.put("key.serializer", "org.apache.kafka.common.serialization.StringSerializer");
         kafkaProps.put("value.serializer", "io.alkal.kalium.kafka.JsonSerializer");
-//        kafkaProps.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
-//        kafkaProps.put("value.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
+
     }
 
     @Override
@@ -98,28 +94,5 @@ public class KaliumKafkaQueueAdapter implements KaliumQueueAdapter {
     public void setQueueListener(QueueListener queueListener) {
         this.queueListener = queueListener;
     }
-
-//    private ConsumerReactor<String, ?> bindReactor(Class<?> reactorClass, Class<?> objectType) {
-//        Properties props = new Properties();
-//        props.put(BOOTSTRAP_SERVERS, kafkaProps.getProperty(BOOTSTRAP_SERVERS));
-//        props.put("group.id", reactorClass.getName());
-//        props.put("enable.auto.commit", "true");
-//        props.put("auto.commit.interval.ms", "1000");
-//        props.put("session.timeout.ms", "30000");
-//
-//        props.put("key.serializer", "org.apache.kafka.common.serialization.StringSerializer");
-//        props.put("value.serializer", "io.alkal.kalium.kafka.JsonSerializer");
-//        props.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
-//        props.put("value.deserializer", "io.alkal.kalium.kafka.JsonDeSerializer");
-//        props.put("pojo.class", objectType);
-//
-//        ConsumerReactor<String, Object> consumer = new ConsumerReactor<>(props);
-//
-//        consumer.subscribe(Collections.singletonList(objectType.getSimpleName()));
-//        consumer.setReactor(reactorClass);
-//        return consumer;
-//
-//    }
-
 
 }
