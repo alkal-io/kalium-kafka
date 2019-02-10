@@ -3,7 +3,6 @@ package io.alkal.kalium.kafka;
 import io.alkal.kalium.internals.QueueListener;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
-import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.apache.kafka.common.errors.WakeupException;
 
 import java.time.Duration;
@@ -36,7 +35,7 @@ public class ConsumerLoop implements Runnable {
 
         HashMap<String, Class<?>> topicToClassMap = new HashMap<>();
         objectTypes.forEach(type -> topicToClassMap.put(type.getSimpleName(), type));
-        props.put("topicToClassMap", topicToClassMap);
+        props.put(Constants.TOPIC_TO_CLASS_MAP, topicToClassMap);
 
         consumer = new ConsumerReactor<>(props);
         consumer.setReactor(reactorClass);

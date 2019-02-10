@@ -6,6 +6,15 @@ public class Payment {
 
     private String id;
 
+    public Payment(){
+
+    }
+
+    public Payment(String id) {
+        super();
+        this.id = id;
+    }
+
     public boolean isProcessed() {
         return processed;
     }

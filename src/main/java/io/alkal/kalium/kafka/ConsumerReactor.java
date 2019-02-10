@@ -1,7 +1,6 @@
 package io.alkal.kalium.kafka;
 
 import org.apache.kafka.clients.consumer.KafkaConsumer;
-
 import java.util.Map;
 
 public class ConsumerReactor<K, V> extends KafkaConsumer<K, V> {
