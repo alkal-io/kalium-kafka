@@ -8,12 +8,18 @@ import java.util.Map;
 
 public class JsonSerializer implements Serializer<Object> {
 
-    private final ObjectMapper objectMapper = new ObjectMapper();
+    private final ObjectMapper objectMapper;
 
     /**
      * Default constructor needed by Kafka
      */
     public JsonSerializer() {
+        objectMapper = new ObjectMapper();
+    }
+
+    //for test purposes
+    public JsonSerializer(ObjectMapper objectMapper) {
+        this.objectMapper = objectMapper;
     }
 
     @Override

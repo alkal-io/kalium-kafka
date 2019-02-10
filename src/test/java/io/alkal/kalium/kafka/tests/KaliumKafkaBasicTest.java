@@ -11,10 +11,7 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 
 import java.util.UUID;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
+
 
 public class KaliumKafkaBasicTest {
 
@@ -42,8 +39,7 @@ public class KaliumKafkaBasicTest {
                 .build();
         kalium2.start();
 
-        Payment payment = new Payment();
-        payment.setId(UUID.randomUUID().toString());
+        Payment payment = new Payment(UUID.randomUUID().toString());
 
         kalium2.post(payment);
 
