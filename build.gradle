@@ -15,10 +15,13 @@ plugins {
     id "jacoco"
 }
 
+group = 'io.alkal'
+version = '0.0.1'
+
 dependencies {
     api 'org.apache.kafka:kafka-clients:2.1.0'
 
-    implementation 'io.alkal:kalium:0.0.1-SNAPSHOT'
+    implementation 'io.alkal:kalium:0.0.1'
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.9.8'
 
     testImplementation 'junit:junit:4.12'
@@ -77,6 +80,17 @@ publishing {
                     developerConnection = 'scm:git:ssh://github.com/alkal-io/kalium-kafka.git'
                     url = 'http://github.com/alkal-io/kalium-kafka.git'
                 }
+            }
+        }
+    }
+    repositories {
+        maven {
+            def releasesRepoUrl = "https://oss.sonatype.org/service/local/staging/deploy/maven2"
+            def snapshotsRepoUrl = "https://oss.sonatype.org/content/repositories/snapshots"
+            url = version.endsWith('SNAPSHOT') ? snapshotsRepoUrl : releasesRepoUrl
+            credentials {
+                username = project.properties['sonatype.user']
+                password = project.properties['sonatype.password']
             }
         }
     }
