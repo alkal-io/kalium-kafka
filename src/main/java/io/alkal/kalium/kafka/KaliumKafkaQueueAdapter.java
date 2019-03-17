@@ -13,6 +13,7 @@ import java.util.stream.Collectors;
 
 public class KaliumKafkaQueueAdapter implements KaliumQueueAdapter {
 
+    private static final long POST_INIT_WARM_TIME = 500L;
 
     public static final String BOOTSTRAP_SERVERS = "bootstrap.servers";
     private Properties kafkaProps;
@@ -21,6 +22,8 @@ public class KaliumKafkaQueueAdapter implements KaliumQueueAdapter {
 
     private QueueListener queueListener;
     private ExecutorService postingExecutorService;
+    private ExecutorService consumersExecutorService;
+    private List<ConsumerLoop> consumers;
 
     public KaliumKafkaQueueAdapter(String kafkaEndpoint) {
         kafkaProps = new Properties();
@@ -37,30 +40,27 @@ public class KaliumKafkaQueueAdapter implements KaliumQueueAdapter {
 
     @Override
     public void start() {
-        Collection<Class<?>> reactorClasses = this.queueListener.getReactorToObjectTypeMap().keySet();
-        if (reactorClasses != null && reactorClasses.size() > 0) {
-            ExecutorService executorService = Executors.newFixedThreadPool(reactorClasses.size());
-            List<ConsumerLoop> consumers = queueListener.getReactorToObjectTypeMap().entrySet().stream().map(reactorEntry ->
+        Collection<String> reactorIds = this.queueListener.getReactorIdsToObjectTypesMap().keySet();
+        if (reactorIds != null && reactorIds.size() > 0) {
+            consumersExecutorService = Executors.newFixedThreadPool(reactorIds.size());
+            consumers = queueListener.getReactorIdsToObjectTypesMap().entrySet().stream().map(reactorEntry ->
                     new ConsumerLoop(reactorEntry.getKey(), reactorEntry.getValue(), this.queueListener)
             ).collect(Collectors.toList());
-            consumers.forEach(consumer -> executorService.submit(consumer));
+            consumers.forEach(consumer -> consumersExecutorService.submit(consumer));
 
             Runtime.getRuntime().addShutdownHook(new Thread() {
                 @Override
                 public void run() {
-                    for (ConsumerLoop consumer : consumers) {
-                        consumer.shutdown();
-                    }
-                    executorService.shutdown();
-                    try {
-                        executorService.awaitTermination(5000, TimeUnit.DAYS.MILLISECONDS);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
+                    shutdownConsumerLoops();
                 }
             });
         }
         postingExecutorService = Executors.newFixedThreadPool(10);
+        try {
+            Thread.sleep(POST_INIT_WARM_TIME);
+        } catch (InterruptedException e) {
+            //do nothing TODO: log event
+        }
 
     }
 
@@ -70,7 +70,7 @@ public class KaliumKafkaQueueAdapter implements KaliumQueueAdapter {
         postingExecutorService.submit(new Runnable() {
             @Override
             public void run() {
-                System.out.println("Object is about to be sent");
+                System.out.println("Object is about to be sent. [ObjectType=" + o.getClass().getSimpleName() + "], [content=" + o.toString() + "]");
                 try {
                     Producer<String, Object> producer = new KafkaProducer<>(kafkaProps);
                     producer.send(new ProducerRecord<String, Object>(o.getClass().getSimpleName(), o));
@@ -88,6 +88,28 @@ public class KaliumKafkaQueueAdapter implements KaliumQueueAdapter {
     @Override
     public void setQueueListener(QueueListener queueListener) {
         this.queueListener = queueListener;
+    }
+
+    @Override
+    public void stop() {
+        postingExecutorService.shutdown();
+        shutdownConsumerLoops();
+
+    }
+
+    private void shutdownConsumerLoops() {
+        if (consumers != null) {
+            for (ConsumerLoop consumer : consumers) {
+                consumer.shutdown();
+            }
+            consumersExecutorService.shutdown();
+            try {
+                consumersExecutorService.awaitTermination(5000, TimeUnit.DAYS.MILLISECONDS);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            consumers = null;
+        }
     }
 
 }
