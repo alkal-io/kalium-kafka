@@ -17,9 +17,9 @@ import static org.junit.Assert.assertTrue;
  */
 public class TestLambda {
 
-    private static final long POLLING_WAIT=2000L;
+    private static final long POLLING_WAIT = 2000L;
 
-    public void printInfo(){
+    public void printInfo() {
         String testInfo = Thread.currentThread().getStackTrace()[2].getMethodName();
         System.out.println("Running test: " + testInfo);
 
@@ -45,9 +45,10 @@ public class TestLambda {
                 .setQueueAdapter(queueAdapter1)
                 .build();
 
-        kalium1.on("receipt", Receipt.class, receipt -> {
+        kalium1.on(Receipt.class, receipt -> {
             System.out.println(receipt);
             messageArrived.set(true);
+
         });
         kalium1.start();
 
@@ -83,7 +84,7 @@ public class TestLambda {
                 .setQueueAdapter(queueAdapter11)
                 .build();
 
-        kalium11.on("payment.processed==true", Payment.class, payment -> {
+        kalium11.on(Payment.class, payment -> {
             System.out.println(payment);
             message1Arrived.set(true);
         });
@@ -96,7 +97,7 @@ public class TestLambda {
                 .setQueueAdapter(queueAdapter12)
                 .build();
 
-        kalium12.on("payment.processed==true", Payment.class, payment -> {
+        kalium12.on(Payment.class, payment -> {
             System.out.println(payment);
             message2Arrived.set(true);
         });
@@ -140,7 +141,7 @@ public class TestLambda {
                 .setQueueAdapter(queueAdapter11)
                 .build();
 
-        kalium11.on("payment.processed==true", Payment.class, payment -> {
+        kalium11.on(Payment.class, payment -> {
             System.out.println(payment);
             message1Arrived.set(true);
         }, PAYMENT_PROCESSOR);
@@ -153,7 +154,7 @@ public class TestLambda {
                 .setQueueAdapter(queueAdapter12)
                 .build();
 
-        kalium12.on("payment.processed==true", Payment.class, payment -> {
+        kalium12.on(Payment.class, payment -> {
             System.out.println(payment);
             message2Arrived.set(true);
         }, PAYMENT_PROCESSOR);

@@ -18,8 +18,6 @@ public class KaliumKafkaQueueAdapter implements KaliumQueueAdapter {
     public static final String BOOTSTRAP_SERVERS = "bootstrap.servers";
     private Properties kafkaProps;
 
-    private Collection<ConsumerReactor<String, ?>> kafkaConsumers;
-
     private QueueListener queueListener;
     private ExecutorService postingExecutorService;
     private ExecutorService consumersExecutorService;
@@ -40,11 +38,11 @@ public class KaliumKafkaQueueAdapter implements KaliumQueueAdapter {
 
     @Override
     public void start() {
-        Collection<String> reactorIds = this.queueListener.getReactorIdsToObjectTypesMap().keySet();
-        if (reactorIds != null && reactorIds.size() > 0) {
-            consumersExecutorService = Executors.newFixedThreadPool(reactorIds.size());
-            consumers = queueListener.getReactorIdsToObjectTypesMap().entrySet().stream().map(reactorEntry ->
-                    new ConsumerLoop(reactorEntry.getKey(), reactorEntry.getValue(), this.queueListener)
+        Collection<String> reactionIds = this.queueListener.getReactionIdsToObjectTypesMap().keySet();
+        if (reactionIds != null && reactionIds.size() > 0) {
+            consumersExecutorService = Executors.newFixedThreadPool(reactionIds.size());
+            consumers = queueListener.getReactionIdsToObjectTypesMap().entrySet().stream().map(reaction ->
+                    new ConsumerLoop(reaction.getKey(), reaction.getValue(), this.queueListener)
             ).collect(Collectors.toList());
             consumers.forEach(consumer -> consumersExecutorService.submit(consumer));
 
