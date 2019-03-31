@@ -2,17 +2,17 @@ env:
   global:
     - CC_TEST_REPORTER_ID=6728d7a9a1ed449e33455dbff8d8b4b8024b7afe9aee4208144cd8c6fdefa1db
 before_script:
-  - wget https://www-eu.apache.org/dist/kafka/2.1.0/kafka_2.11-2.1.0.tgz
+  - wget https://www.apache.org/dyn/closer.cgi?path=/kafka/2.2.0/kafka_2.11-2.2.0.tgz
   - rm -rfv /tmp/kafka*
   - rm -rfv /tmp/zookeeper*
-  - rm -rfv kafka_2.11-2.1.0
-  - tar -xvf kafka_2.11-2.1.0.tgz
-  - kafka_2.11-2.1.0/bin/zookeeper-server-start.sh kafka_2.11-2.1.0/config/zookeeper.properties&
+  - rm -rfv kafka_2.11-2.2.0
+  - tar -xvf kafka_2.11-2.2.0.tgz
+  - kafka_2.11-2.2.0/bin/zookeeper-server-start.sh kafka_2.11-2.2.0/config/zookeeper.properties&
   - sleep 20s
-  - kafka_2.11-2.1.0/bin/kafka-server-start.sh kafka_2.11-2.1.0/config/server.properties&
+  - kafka_2.11-2.2.0/bin/kafka-server-start.sh kafka_2.11-2.2.0/config/server.properties&
   - sleep 20s
-  - kafka_2.11-2.1.0/bin/kafka-topics.sh --create --zookeeper localhost:2181 --replication-factor 1 --partitions 1 --topic Payment&
-  - kafka_2.11-2.1.0/bin/kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic test --from-beginning&
+  - kafka_2.11-2.2.0/bin/kafka-topics.sh --create --zookeeper localhost:2181 --replication-factor 1 --partitions 1 --topic Payment&
+  - kafka_2.11-2.2.0/bin/kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic test --from-beginning&
   - chmod a+x gradlew
   - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
   - chmod +x ./cc-test-reporter
