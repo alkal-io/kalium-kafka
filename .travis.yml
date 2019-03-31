@@ -2,7 +2,7 @@ env:
   global:
     - CC_TEST_REPORTER_ID=6728d7a9a1ed449e33455dbff8d8b4b8024b7afe9aee4208144cd8c6fdefa1db
 before_script:
-  - wget https://www.apache.org/dyn/closer.cgi?path=/kafka/2.2.0/kafka_2.11-2.2.0.tgz
+  - wget https://www-eu.apache.org/dist/kafka/2.2.0/kafka_2.11-2.2.0.tgz
   - rm -rfv /tmp/kafka*
   - rm -rfv /tmp/zookeeper*
   - rm -rfv kafka_2.11-2.2.0
