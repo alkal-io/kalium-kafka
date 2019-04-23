@@ -2,26 +2,18 @@ package io.alkal.kalium.kafka.tests;
 
 import java.util.UUID;
 
-public class Payment {
+public class Receipt {
 
     private boolean processed;
 
     private String id;
 
-    public Payment(){
+    public Receipt(){
         id = UUID.randomUUID().toString();
     }
 
-    public Payment(String id) {
+    public Receipt(String id) {
         this.id = id;
-    }
-
-    public boolean isProcessed() {
-        return processed;
-    }
-
-    public void setProcessed(boolean processed) {
-        this.processed = processed;
     }
 
     public String getId() {
@@ -34,6 +26,6 @@ public class Payment {
 
     @Override
     public String toString() {
-        return "{id: "+id+", processed: "+processed+"}";
+        return "{id: "+id+"}";
     }
 }

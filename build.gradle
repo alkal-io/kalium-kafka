@@ -12,16 +12,16 @@ plugins {
     id 'maven-publish'
     id "com.palantir.git-version" version "0.12.0-rc2"
     id 'signing'
-    id "jacoco"
+    id 'jacoco'
 }
 
 group = 'io.alkal'
-version = '0.0.1'
+version = '0.0.2'
 
 dependencies {
     api 'org.apache.kafka:kafka-clients:2.1.0'
 
-    implementation 'io.alkal:kalium:0.0.1'
+    implementation 'io.alkal:kalium:0.0.2'
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.9.8'
 
     testImplementation 'junit:junit:4.12'
@@ -36,6 +36,9 @@ repositories {
     mavenLocal()
     maven {
         url "https://oss.sonatype.org/content/groups/staging"
+    }
+    maven {
+        url "https://oss.sonatype.org/content/groups/public"
     }
 }
 
@@ -54,13 +57,13 @@ publishing {
         maven(MavenPublication) {
             groupId = 'io.alkal'
             artifactId = 'kalium-kafka'
-            version = '0.0.1'
+            version = '0.0.2'
             from components.java
             artifact sourcesJar
             artifact javadocJar
             pom {
                 name = 'Kalium Kafka'
-                description = 'An Apache Kafka implementation of KaliumQueueAdapter. current commit_id'+ gitVersion()
+                description = 'An Apache Kafka implementation of KaliumQueueAdapter. current commit_id' + gitVersion()
                 url = 'https://kalium.alkal.io'
                 licenses {
                     license {
@@ -87,7 +90,8 @@ publishing {
         maven {
             def releasesRepoUrl = "https://oss.sonatype.org/service/local/staging/deploy/maven2"
             def snapshotsRepoUrl = "https://oss.sonatype.org/content/repositories/snapshots"
-            url = version.endsWith('SNAPSHOT') ? snapshotsRepoUrl : releasesRepoUrl
+           url = version.endsWith('SNAPSHOT') ? snapshotsRepoUrl : releasesRepoUrl
+            // url = snapshotsRepoUrl
             credentials {
                 username = project.properties['sonatype.user']
                 password = project.properties['sonatype.password']
@@ -102,7 +106,7 @@ signing {
 
 
 javadoc {
-    if(JavaVersion.current().isJava9Compatible()) {
+    if (JavaVersion.current().isJava9Compatible()) {
         options.addBooleanOption('html5', true)
     }
 }
