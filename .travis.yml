@@ -1,3 +1,8 @@
+addons:
+  sonarcloud:
+    organization: "alkal-io"
+    token:
+      secure: d79ab681ebb66525614a2e5c86213238804ea4dc
 env:
   global:
     - CC_TEST_REPORTER_ID=6728d7a9a1ed449e33455dbff8d8b4b8024b7afe9aee4208144cd8c6fdefa1db
@@ -24,7 +29,9 @@ jdk:
   - oraclejdk9
   - openjdk8
   - openjdk9
-script: ./gradlew build
+script: 
+  - ./gradlew build
+  - sonar-scanner
 after_script:
   - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
 notifications:
