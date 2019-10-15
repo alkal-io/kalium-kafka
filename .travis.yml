@@ -1,3 +1,4 @@
+dist: trusty
 env:
   global:
     - CC_TEST_REPORTER_ID=6728d7a9a1ed449e33455dbff8d8b4b8024b7afe9aee4208144cd8c6fdefa1db
@@ -24,8 +25,11 @@ jdk:
   - oraclejdk9
   - openjdk8
   - openjdk9
-script: ./gradlew build
+script:
+  - ./gradlew build jacocoTestReport
 after_script:
   - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
+after_success:
+  - bash <(curl -s https://codecov.io/bash)
 notifications:
   slack: kalium-alkalio:TKKbLCQK8wW6HLPGfrGWyKUS
