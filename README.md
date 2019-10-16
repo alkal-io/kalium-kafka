@@ -6,4 +6,5 @@ Kalium adapter for Apache Kafka. See https://kalium.alkal.io for details
 [![codecov](https://codecov.io/gh/alkal-io/kalium-kafka/branch/master/graph/badge.svg)](https://codecov.io/gh/alkal-io/kalium-kafka)
 [![Total alerts](https://img.shields.io/lgtm/alerts/g/alkal-io/kalium-kafka.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/alkal-io/kalium-kafka/alerts/)
 [![Language grade: Java](https://img.shields.io/lgtm/grade/java/g/alkal-io/kalium-kafka.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/alkal-io/kalium-kafka/context:java)
+[![Known Vulnerabilities](https://snyk.io/test/github/alkal-io/kalium-kafka/badge.svg)](https://snyk.io/test/github/alkal-io/kalium-kafka)
 
