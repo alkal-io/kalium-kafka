@@ -19,7 +19,7 @@ group = 'io.alkal'
 version = '0.0.3'
 
 dependencies {
-    api 'org.apache.kafka:kafka-clients:2.1.1'
+    api 'org.apache.kafka:kafka-clients:2.1.0'
 
     implementation 'io.alkal:kalium:0.0.3'
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.10.0'
