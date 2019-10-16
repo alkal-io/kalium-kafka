@@ -3,6 +3,8 @@ package io.alkal.kalium.kafka.tests;/*
  */
 
 import io.alkal.kalium.Kalium;
+import io.alkal.kalium.exceptions.KaliumBuilderException;
+import io.alkal.kalium.exceptions.KaliumException;
 import io.alkal.kalium.interfaces.KaliumQueueAdapter;
 import io.alkal.kalium.kafka.KaliumKafkaQueueAdapter;
 import org.junit.Assert;
@@ -18,7 +20,7 @@ public class KaliumKafkaBasicTest {
     public static final String KAFKA_ENDPOINT = "localhost:9092";
 
     @Test
-    public void testItShouldCallReactionMethod_whenAMatchingEventIsPosted() throws InterruptedException {
+    public void testItShouldCallReactionMethod_whenAMatchingEventIsPosted() throws InterruptedException, KaliumBuilderException {
 
         System.out.println("Start Kalium-Kafka Basic End-2-End Test");
         KaliumQueueAdapter queueAdapter1 = new KaliumKafkaQueueAdapter(KAFKA_ENDPOINT);
