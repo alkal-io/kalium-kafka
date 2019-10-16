@@ -1,6 +1,8 @@
 package io.alkal.kalium.kafka.tests;
 
 import io.alkal.kalium.Kalium;
+import io.alkal.kalium.exceptions.KaliumBuilderException;
+import io.alkal.kalium.exceptions.KaliumException;
 import io.alkal.kalium.interfaces.KaliumQueueAdapter;
 import io.alkal.kalium.kafka.KaliumKafkaQueueAdapter;
 import org.junit.Before;
@@ -32,7 +34,7 @@ public class TestLambda {
 
 
     @Test
-    public void test_lambdaOn_shouldInvoke_whenPublishingAnEvent() throws InterruptedException {
+    public void test_lambdaOn_shouldInvoke_whenPublishingAnEvent() throws InterruptedException, KaliumBuilderException, KaliumException {
 
         printInfo();
         final AtomicReference<Boolean> messageArrived = new AtomicReference<>();
@@ -71,7 +73,7 @@ public class TestLambda {
     }
 
     @Test
-    public void test_lambdaOn_shouldInvokeInAllConsumersWithDifferentProcessingGroup_whenPublishingAnEvent() throws InterruptedException {
+    public void test_lambdaOn_shouldInvokeInAllConsumersWithDifferentProcessingGroup_whenPublishingAnEvent() throws InterruptedException, KaliumBuilderException, KaliumException {
         printInfo();
         final AtomicReference<Boolean> message1Arrived = new AtomicReference<>();
         message1Arrived.set(false);
@@ -125,7 +127,7 @@ public class TestLambda {
     }
 
     @Test
-    public void test_lambdaOn_shouldInvokeOnlyOneConsumersWithSameProcessingGroup_whenPublishingAnEvent() throws InterruptedException {
+    public void test_lambdaOn_shouldInvokeOnlyOneConsumersWithSameProcessingGroup_whenPublishingAnEvent() throws InterruptedException, KaliumBuilderException, KaliumException {
         printInfo();
         final AtomicReference<Boolean> message1Arrived = new AtomicReference<>();
         message1Arrived.set(false);

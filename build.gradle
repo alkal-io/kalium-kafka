@@ -16,12 +16,12 @@ plugins {
 }
 
 group = 'io.alkal'
-version = '0.0.2'
+version = '0.0.3'
 
 dependencies {
     api 'org.apache.kafka:kafka-clients:2.1.0'
 
-    implementation 'io.alkal:kalium:0.0.2'
+    implementation 'io.alkal:kalium:0.0.3'
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.9.8'
 
     testImplementation 'junit:junit:4.12'
@@ -34,6 +34,7 @@ repositories {
     // You can declare any Maven/Ivy/file repository here.
     jcenter()
     mavenLocal()
+    mavenCentral()
     maven {
         url "https://oss.sonatype.org/content/groups/staging"
     }
@@ -57,7 +58,7 @@ publishing {
         maven(MavenPublication) {
             groupId = 'io.alkal'
             artifactId = 'kalium-kafka'
-            version = '0.0.2'
+            version = '0.0.3'
             from components.java
             artifact sourcesJar
             artifact javadocJar
