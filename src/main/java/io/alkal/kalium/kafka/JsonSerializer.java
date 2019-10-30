@@ -1,12 +1,8 @@
 package io.alkal.kalium.kafka;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.apache.kafka.common.errors.SerializationException;
-import org.apache.kafka.common.serialization.Serializer;
 
-import java.util.Map;
-
-public class JsonSerializer implements Serializer<Object> {
+public class JsonSerializer extends BaseSerializer {
 
     private final ObjectMapper objectMapper;
 
@@ -22,25 +18,13 @@ public class JsonSerializer implements Serializer<Object> {
         this.objectMapper = objectMapper;
     }
 
-    @Override
-    public void configure(Map<String, ?> props, boolean isKey) {
-    }
 
     @Override
-    public byte[] serialize(String topic, Object data) {
-        if (data == null)
-            return null;
+    public byte[] serializeImpl(Object data) throws Exception {
+        return objectMapper.writeValueAsBytes(data);
 
-        try {
-            return objectMapper.writeValueAsBytes(data);
-        } catch (Exception e) {
-            throw new SerializationException("Error serializing JSON message", e);
-        }
     }
 
-    @Override
-    public void close() {
-    }
 
 }
 

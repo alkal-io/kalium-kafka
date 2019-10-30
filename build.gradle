@@ -16,13 +16,14 @@ plugins {
 }
 
 group = 'io.alkal'
-version = '0.0.3'
+version = '0.0.4'
 
 dependencies {
     api 'org.apache.kafka:kafka-clients:2.1.1'
 
     implementation 'io.alkal:kalium:0.0.3'
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.10.0'
+    implementation 'com.google.protobuf:protobuf-java:3.9.2'
 
     testImplementation 'junit:junit:4.12'
     testImplementation 'org.mockito:mockito-core:2.23.4'
@@ -58,7 +59,7 @@ publishing {
         maven(MavenPublication) {
             groupId = 'io.alkal'
             artifactId = 'kalium-kafka'
-            version = '0.0.3'
+            version = '0.0.4-SNAPSHOT'
             from components.java
             artifact sourcesJar
             artifact javadocJar
