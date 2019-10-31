@@ -5,6 +5,7 @@ package io.alkal.kalium.kafka.tests;/*
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.alkal.kalium.kafka.Constants;
 import io.alkal.kalium.kafka.JsonDeSerializer;
+import io.alkal.kalium.kafka.tests.models.pojo.Payment;
 import org.apache.kafka.common.errors.SerializationException;
 import org.junit.Before;
 import org.junit.Test;

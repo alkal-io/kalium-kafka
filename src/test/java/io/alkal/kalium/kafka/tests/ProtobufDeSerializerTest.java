@@ -4,11 +4,9 @@ package io.alkal.kalium.kafka.tests;/*
 
 import io.alkal.kalium.kafka.Constants;
 import io.alkal.kalium.kafka.ProtobufDeSerializer;
-import io.alkal.kalium.kafka.tests.pb.Payment;
 import org.apache.kafka.common.errors.SerializationException;
 import org.junit.Test;
 
-import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -18,7 +16,7 @@ import static org.junit.Assert.*;
 public class ProtobufDeSerializerTest {
 
     public static final String payment_id = "cdb0dfb9-396d-4269-bfa4-8408211b5e3d";
-    public static final byte[] validSerializedPayment = io.alkal.kalium.kafka.tests.pb.Payment.PaymentPB.newBuilder().setId(payment_id).setProcessed(false).build().toByteArray();
+    public static final byte[] validSerializedPayment = io.alkal.kalium.kafka.tests.models.pb.Payment.PaymentPB.newBuilder().setId(payment_id).setProcessed(false).build().toByteArray();
     public static final String validTopic = "payment";
 
 
@@ -98,14 +96,14 @@ public class ProtobufDeSerializerTest {
         target = new ProtobufDeSerializer();
         target.configure(props, false);
         Object o = target.deserialize(validTopic, validSerializedPayment);
-        assertTrue(o instanceof io.alkal.kalium.kafka.tests.pb.Payment.PaymentPB);
+        assertTrue(o instanceof io.alkal.kalium.kafka.tests.models.pb.Payment.PaymentPB);
     }
 
 
     private static Map<String, Object> createValidProps() {
         Map<String, Object> props = new HashMap<>();
         Map<String, Class> topicToClassMap = new HashMap<>();
-        topicToClassMap.put("payment", io.alkal.kalium.kafka.tests.pb.Payment.PaymentPB.class);
+        topicToClassMap.put("payment", io.alkal.kalium.kafka.tests.models.pb.Payment.PaymentPB.class);
         props.put(Constants.TOPIC_TO_CLASS_MAP, topicToClassMap);
         return props;
     }

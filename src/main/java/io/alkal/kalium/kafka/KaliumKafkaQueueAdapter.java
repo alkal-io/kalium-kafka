@@ -32,7 +32,7 @@ public class KaliumKafkaQueueAdapter implements KaliumQueueAdapter {
 
         //TODO provide kalium implementation for these ones
         kafkaProps.put("key.serializer", "org.apache.kafka.common.serialization.StringSerializer");
-        kafkaProps.put("value.serializer", "io.alkal.kalium.kafka.JsonSerializer");
+        kafkaProps.put("value.serializer", "io.alkal.kalium.kafka.MultiSerializer");
 
     }
 

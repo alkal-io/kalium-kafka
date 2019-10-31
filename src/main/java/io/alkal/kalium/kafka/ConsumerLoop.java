@@ -28,7 +28,7 @@ public class ConsumerLoop implements Runnable {
         props.put("key.serializer", "org.apache.kafka.common.serialization.StringSerializer");
         props.put("value.serializer", "io.alkal.kalium.kafka.MultiSerializer");
         props.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
-        props.put("value.deserializer", "io.alkal.kalium.kafka.MultiDeserializer");
+        props.put("value.deserializer", "io.alkal.kalium.kafka.MultiDeSerializer");
         props.put("enable.auto.commit", "true");
         props.put("auto.commit.interval.ms", "1000");
         props.put("session.timeout.ms", "30000");

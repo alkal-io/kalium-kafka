@@ -1,4 +1,4 @@
-package io.alkal.kalium.kafka.tests;
+package io.alkal.kalium.kafka.tests.models.pojo;
 
 import java.util.UUID;
 

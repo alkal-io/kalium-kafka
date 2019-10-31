@@ -7,7 +7,7 @@ import io.alkal.kalium.kafka.Constants;
 import io.alkal.kalium.kafka.JsonSerializer;
 import io.alkal.kalium.kafka.MultiSerializer;
 import io.alkal.kalium.kafka.ProtobufSerializer;
-import io.alkal.kalium.kafka.tests.pb.Payment;
+import io.alkal.kalium.kafka.tests.models.pb.Payment;
 import org.apache.kafka.common.errors.SerializationException;
 import org.junit.Before;
 import org.junit.Test;
@@ -57,7 +57,7 @@ public class MultiSerializerTest {
     @Test(expected = SerializationException.class)
     public void testSerialize_shouldThrowAnException_whenDelegatSerializerThrowsException() throws NoSuchMethodException {
         doThrow(new SerializationException()).when(jsonSerializer).serialize(any(), any());
-        target.serialize("payment", new io.alkal.kalium.kafka.tests.Payment());
+        target.serialize("payment", new io.alkal.kalium.kafka.tests.models.pojo.Payment());
     }
 
     @Test
@@ -77,7 +77,7 @@ public class MultiSerializerTest {
         Map<String, Object> props = createValidProps();
         target.configure(props, false);
         byte[] data = new byte[3];
-        io.alkal.kalium.kafka.tests.Payment payment = new io.alkal.kalium.kafka.tests.Payment();
+        io.alkal.kalium.kafka.tests.models.pojo.Payment payment = new io.alkal.kalium.kafka.tests.models.pojo.Payment();
         verify(protobufSerializer, never()).serialize(anyString(), any(Object.class));
         byte[] bytes = target.serialize("payment", payment);
         assertArrayEquals(new ObjectMapper().writeValueAsBytes(payment), bytes);
@@ -97,7 +97,7 @@ public class MultiSerializerTest {
         Map<String, Object> props = new HashMap<>();
         Map<String, Class> topicToClassMap = new HashMap<>();
         topicToClassMap.put("paymentPb", Payment.PaymentPB.class);
-        topicToClassMap.put("payment", io.alkal.kalium.kafka.tests.Payment.class);
+        topicToClassMap.put("payment", io.alkal.kalium.kafka.tests.models.pojo.Payment.class);
         props.put(Constants.TOPIC_TO_CLASS_MAP, topicToClassMap);
         return props;
     }

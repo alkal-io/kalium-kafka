@@ -5,6 +5,8 @@ import io.alkal.kalium.exceptions.KaliumBuilderException;
 import io.alkal.kalium.exceptions.KaliumException;
 import io.alkal.kalium.interfaces.KaliumQueueAdapter;
 import io.alkal.kalium.kafka.KaliumKafkaQueueAdapter;
+import io.alkal.kalium.kafka.tests.models.pojo.Payment;
+import io.alkal.kalium.kafka.tests.models.pojo.Receipt;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -69,6 +71,46 @@ public class TestLambda {
         kalium1.stop();
 
         assertTrue(messageArrived.get().booleanValue());
+
+    }
+
+    @Test
+    public void test_lambdaOn_shouldInvoke_whenPublishingAProtoObject() throws InterruptedException, KaliumBuilderException, KaliumException {
+
+        printInfo();
+        final AtomicReference<Boolean> protoObjectArrived = new AtomicReference<>();
+        protoObjectArrived.set(false);
+
+        System.out.println("Start Kalium-Kafka Basic End-2-End Test With Proto Objects");
+        KaliumQueueAdapter queueAdapter1 = new KaliumKafkaQueueAdapter(KaliumKafkaBasicTest.KAFKA_ENDPOINT);
+
+        Kalium kalium1 = Kalium.Builder()
+                .setQueueAdapter(queueAdapter1)
+                .build();
+
+        kalium1.on(io.alkal.kalium.kafka.tests.models.pb.Payment.PaymentPB.class, payment -> {
+            System.out.println("Proto object for Payment arrived! [id=" + payment.getId() + "]");
+            protoObjectArrived.set(true);
+
+        });
+        kalium1.start();
+
+
+        KaliumQueueAdapter queueAdapter2 = new KaliumKafkaQueueAdapter(KaliumKafkaBasicTest.KAFKA_ENDPOINT);
+        Kalium kalium2 = Kalium.Builder()
+                .setQueueAdapter(queueAdapter2)
+                .build();
+        kalium2.start();
+
+        io.alkal.kalium.kafka.tests.models.pb.Payment.PaymentPB payment =
+                io.alkal.kalium.kafka.tests.models.pb.Payment.PaymentPB.newBuilder().setId("my payment id").build();
+        kalium2.post(payment);
+
+        Thread.sleep(POLLING_WAIT);
+        kalium2.stop();
+        kalium1.stop();
+
+        assertTrue(protoObjectArrived.get().booleanValue());
 
     }
 

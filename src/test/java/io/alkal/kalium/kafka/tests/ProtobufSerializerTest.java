@@ -3,7 +3,7 @@ package io.alkal.kalium.kafka.tests;/*
  */
 
 import io.alkal.kalium.kafka.ProtobufSerializer;
-import io.alkal.kalium.kafka.tests.pb.Payment;
+import io.alkal.kalium.kafka.tests.models.pb.Payment;
 import org.junit.Test;
 
 import static org.junit.Assert.*;

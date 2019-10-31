@@ -1,9 +1,7 @@
 package io.alkal.kalium.kafka;
 
-import org.apache.kafka.common.errors.SerializationException;
 import org.apache.kafka.common.serialization.Deserializer;
 
-import java.lang.reflect.Method;
 import java.util.Map;
 
 /**

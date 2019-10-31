@@ -1,6 +1,5 @@
 package io.alkal.kalium.kafka;
 
-import org.apache.kafka.common.errors.SerializationException;
 import org.apache.kafka.common.serialization.Serializer;
 
 import java.util.Map;
