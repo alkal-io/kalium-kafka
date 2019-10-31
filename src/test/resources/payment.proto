@@ -1,0 +1,6 @@
+syntax = "proto3";
+package io.alkal.kalium.kafka.tests.pb;
+message PaymentPB {
+  string id = 1;
+  bool processed = 2;
+}

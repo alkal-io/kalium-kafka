@@ -4,9 +4,9 @@ package io.alkal.kalium.kafka.tests;/*
 
 import io.alkal.kalium.Kalium;
 import io.alkal.kalium.exceptions.KaliumBuilderException;
-import io.alkal.kalium.exceptions.KaliumException;
 import io.alkal.kalium.interfaces.KaliumQueueAdapter;
 import io.alkal.kalium.kafka.KaliumKafkaQueueAdapter;
+import io.alkal.kalium.kafka.tests.models.pojo.Payment;
 import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
