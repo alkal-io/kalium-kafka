@@ -59,7 +59,7 @@ publishing {
         maven(MavenPublication) {
             groupId = 'io.alkal'
             artifactId = 'kalium-kafka'
-            version = '0.0.4-SNAPSHOT'
+            version = '0.0.4'
             from components.java
             artifact sourcesJar
             artifact javadocJar
@@ -93,7 +93,6 @@ publishing {
             def releasesRepoUrl = "https://oss.sonatype.org/service/local/staging/deploy/maven2"
             def snapshotsRepoUrl = "https://oss.sonatype.org/content/repositories/snapshots"
            url = version.endsWith('SNAPSHOT') ? snapshotsRepoUrl : releasesRepoUrl
-            // url = snapshotsRepoUrl
             credentials {
                 username = project.properties['sonatype.user']
                 password = project.properties['sonatype.password']
